@@ -20,6 +20,9 @@
  */
 
 #include "rtue/hdr/stack/rrc/rrc.h"
+#include "rtue/hdr/stack/rrc/phy_controller.h"
+#include "rtue/hdr/stack/rrc/rrc_meas.h"
+#include "rtue/hdr/stack/rrc/rrc_procedures.h"
 #include "srsran/asn1/rrc.h"
 #include "srsran/common/bcd_helpers.h"
 #include "srsran/common/security.h"
@@ -29,9 +32,6 @@
 #include "srsran/interfaces/ue_pdcp_interfaces.h"
 #include "srsran/interfaces/ue_rlc_interfaces.h"
 #include "srsran/interfaces/ue_usim_interfaces.h"
-#include "rtue/hdr/stack/rrc/phy_controller.h"
-#include "rtue/hdr/stack/rrc/rrc_meas.h"
-#include "rtue/hdr/stack/rrc/rrc_procedures.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -79,7 +79,8 @@ rrc::rrc(stack_interface_rrc* stack_, srsran::task_sched_handle task_sched_) :
   conn_recfg_proc(this),
   meas_cells_nr(task_sched_),
   meas_cells(task_sched_)
-{}
+{
+}
 
 rrc::~rrc() = default;
 
@@ -1690,19 +1691,6 @@ void rrc::send_ul_ccch_msg(const ul_ccch_msg_s& msg)
   uint32_t lcid = srb_to_lcid(lte_srb::srb0);
   log_rrc_message(get_rb_name(lcid), Tx, pdcp_buf.get(), msg, msg.msg.c1().type().to_string());
 
-  if (args.sdu_fuzzed_bits > 0 && (args.target_message == msg.msg.c1().type().to_string() || args.target_message == "")) {
-    std::cout << "Fuzzing message: " << std::endl
-                << "\tMessage Type: " << msg.msg.c1().type().to_string() << std::endl
-                << "\taddress: " << pdcp_buf.get()  << std::endl
-                << "\tMsg length(bytes): " << pdcp_buf->N_bytes << std::endl
-                << "\tfuzzing bits: " << args.sdu_fuzzed_bits << std::endl;
-    for (uint32_t i = 0; i < args.sdu_fuzzed_bits; ++i) {
-          uint32_t byte_to_flip = std::rand() % pdcp_buf->N_bytes;
-          uint8_t bit_to_flip = std::rand() % 8;
-          pdcp_buf->msg[byte_to_flip] ^= (1 << bit_to_flip); // Flip a random bit in the buffer
-    }
-  }
-
   rlc->write_sdu(lcid, std::move(pdcp_buf));
 }
 
@@ -1728,19 +1716,6 @@ void rrc::send_ul_dcch_msg(uint32_t lcid, const ul_dcch_msg_s& msg)
       log_rrc_message(get_rb_name(lcid), Tx, pdcp_buf.get(), msg, msg.msg.msg_class_ext().c2().type().to_string());
     } else {
       log_rrc_message(get_rb_name(lcid), Tx, pdcp_buf.get(), msg, msg.msg.msg_class_ext().type().to_string());
-    }
-  }
-
-  if (args.sdu_fuzzed_bits > 0 && (args.target_message == msg.msg.c1().type().to_string() || args.target_message == "")) {
-    std::cout << "Fuzzing message: " << std::endl
-                << "\tMessage Type: " << msg.msg.c1().type().to_string() << std::endl
-                << "\taddress: " << pdcp_buf.get()  << std::endl
-                << "\tMsg length(bytes): " << pdcp_buf->N_bytes << std::endl
-                << "\tfuzzing bits: " << args.sdu_fuzzed_bits << std::endl;
-    for (uint32_t i = 0; i < args.sdu_fuzzed_bits; ++i) {
-          uint32_t byte_to_flip = std::rand() % pdcp_buf->N_bytes;
-          uint8_t bit_to_flip = std::rand() % 8;
-          pdcp_buf->msg[byte_to_flip] ^= (1 << bit_to_flip); // Flip a random bit in the buffer
     }
   }
 
@@ -3059,4 +3034,4 @@ void rrc::nr_scg_failure_information(const scg_failure_cause_t cause)
   send_ul_dcch_msg(srb_to_lcid(lte_srb::srb1), ul_dcch_msg);
 }
 
-}
+} // namespace srsue

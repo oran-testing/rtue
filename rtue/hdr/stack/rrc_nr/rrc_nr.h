@@ -25,6 +25,7 @@
 #include "../rrc/rrc_cell.h"
 #include "rrc_nr_config.h"
 #include "rrc_nr_metrics.h"
+#include "rtue/hdr/stack/upper/gw.h"
 #include "srsran/adt/circular_map.h"
 #include "srsran/asn1/rrc_nr.h"
 #include "srsran/asn1/rrc_nr_utils.h"
@@ -38,7 +39,6 @@
 #include "srsran/interfaces/ue_nr_interfaces.h"
 #include "srsran/interfaces/ue_rrc_interfaces.h"
 #include "srsran/interfaces/ue_sdap_interfaces.h"
-#include "rtue/hdr/stack/upper/gw.h"
 
 namespace srsue {
 
@@ -139,13 +139,8 @@ public:
   void set_phy_config_complete(bool status) final;
 
 private:
-
   // soft T UE additions
-  srsran::unique_byte_buffer_t fuzz_ccch_msg(srsran::unique_byte_buffer_t pdu, const asn1::rrc_nr::ul_ccch_msg_s msg, std::string msg_name);
-  srsran::unique_byte_buffer_t fuzz_dcch_msg(srsran::unique_byte_buffer_t pdu, const asn1::rrc_nr::ul_dcch_msg_s msg, std::string msg_name);
   srsran::unique_byte_buffer_t signal_flood_ccch(uint32_t lcid, srsran::unique_byte_buffer_t pdu, std::string msg_name);
-
-
 
   // parsers
   void decode_pdu_bcch_dlsch(srsran::unique_byte_buffer_t pdu);
@@ -171,8 +166,6 @@ private:
   void handle_security_mode_command(const asn1::rrc_nr::security_mode_cmd_s& smc);
   void handle_rrc_release(const asn1::rrc_nr::rrc_release_s& rrc_release);
   void generate_as_keys();
-
-
 
   srsran::task_sched_handle task_sched;
   struct cmd_msg_t {

@@ -41,8 +41,6 @@ struct rrc_args_t {
   bool                                    support_ca;
   int                                     mbms_service_id;
   uint32_t                                mbms_service_port;
-  uint32_t                                sdu_fuzzed_bits;
-  std::string                             target_message;
 };
 
 #define SRSRAN_UE_CATEGORY_DEFAULT "4"

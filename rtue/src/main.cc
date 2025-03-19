@@ -154,9 +154,6 @@ static int parse_args(all_args_t* args, int argc, char* argv[])
     ("rrc.mbms_service_port",   bpo::value<uint32_t>(&args->stack.rrc.mbms_service_port)->default_value(4321),                    "Port of the MBMS service")
     ("rrc.nr_measurement_pci",  bpo::value<uint32_t>(&args->stack.rrc_nr.sim_nr_meas_pci)->default_value(500),                    "NR PCI for the simulated NR measurement")
     ("rrc.nr_short_sn_support", bpo::value<bool>(&args->stack.rrc_nr.pdcp_short_sn_support)->default_value(true),                 "Announce PDCP short SN support")
-    ("rrc.sdu_fuzzed_bits",     bpo::value<uint32_t>(&args->stack.rrc_nr.sdu_fuzzed_bits)->default_value(0),                      "Number of bits to fuzz in the SDU buffer (0 disables fuzzing)")
-    ("rrc.fuzz_target_message", bpo::value<string>(&args->stack.rrc_nr.target_message)->default_value(""),                        "The Message to be fuzzed in the RRC")
-    ("rrc.target_signal_attack",     bpo::value<string>(&args->stack.rrc_nr.target_signal_attack)->default_value(""),              "The Singalling storm type to be injected")
 
     ("prach.prach_flooding_attack_enabled",     bpo::value<bool>(&args->stack.rrc_nr.prach_flooding_attack_enabled)->default_value(false),              "Enable the PRACH flooding attack")
 

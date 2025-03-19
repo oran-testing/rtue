@@ -40,9 +40,6 @@ struct rrc_nr_args_t {
   srsran_subcarrier_spacing_t ssb_scs;
   std::string                 log_level;
   uint32_t                    log_hex_limit;
-  uint32_t                    sdu_fuzzed_bits;
-  std::string                 target_message;
-  std::string                 target_signal_attack;
 
   bool prach_flooding_attack_enabled = false;
 };
