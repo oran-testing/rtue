@@ -664,21 +664,6 @@ void rrc_nr::send_ul_ccch_msg(const asn1::rrc_nr::ul_ccch_msg_s& msg)
   rlc->write_sdu(lcid, std::move(pdu));
 }
 
-srsran::unique_byte_buffer_t
-rrc_nr::signal_flood_ccch(uint32_t lcid, srsran::unique_byte_buffer_t pdu, std::string msg_name)
-{
-  for (uint16_t i = 0; i < 300; i++) {
-    srsran::unique_byte_buffer_t new_buffer(pdu.get());
-    std::cout << "Flooding message: " << std::endl
-              << "\tMessage Type: " << msg_name << std::endl
-              << "\taddress: " << new_buffer.get() << std::endl
-              << "\tMsg length(bytes): " << new_buffer->N_bytes << std::endl
-              << "\tRRC state: " << rrc_nr_state_text[state] << std::endl;
-    rlc->write_sdu(lcid, std::move(new_buffer));
-  }
-  return std::move(pdu);
-}
-
 void rrc_nr::send_ul_dcch_msg(uint32_t lcid, const ul_dcch_msg_s& msg)
 {
   // Reset and reuse sdu buffer if provided
@@ -1535,8 +1520,7 @@ bool rrc_nr::apply_ul_common_cfg(const asn1::rrc_nr::ul_cfg_common_s& ul_cfg_com
   if (ul_cfg_common.init_ul_bwp_present) {
     if (ul_cfg_common.init_ul_bwp.rach_cfg_common_present) {
       if (ul_cfg_common.init_ul_bwp.rach_cfg_common.type() == setup_release_c<rach_cfg_common_s>::types_opts::setup) {
-        rach_cfg_nr_t rach_cfg_nr                 = {};
-        rach_cfg_nr.prach_flooding_attack_enabled = args.prach_flooding_attack_enabled;
+        rach_cfg_nr_t rach_cfg_nr = {};
         make_mac_rach_cfg(ul_cfg_common.init_ul_bwp.rach_cfg_common.setup(), &rach_cfg_nr);
         mac->set_config(rach_cfg_nr);
 

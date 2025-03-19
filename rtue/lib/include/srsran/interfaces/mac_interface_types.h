@@ -142,8 +142,6 @@ struct rach_cfg_nr_t {
   uint32_t ra_ContentionResolutionTimer;
   uint32_t nof_preambles;
 
-  bool prach_flooding_attack_enabled;
-
   rach_cfg_nr_t() { reset(); }
   void reset()
   {

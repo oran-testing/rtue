@@ -139,9 +139,6 @@ public:
   void set_phy_config_complete(bool status) final;
 
 private:
-  // soft T UE additions
-  srsran::unique_byte_buffer_t signal_flood_ccch(uint32_t lcid, srsran::unique_byte_buffer_t pdu, std::string msg_name);
-
   // parsers
   void decode_pdu_bcch_dlsch(srsran::unique_byte_buffer_t pdu);
   void decode_dl_ccch(srsran::unique_byte_buffer_t pdu);

