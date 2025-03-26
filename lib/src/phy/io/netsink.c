@@ -52,14 +52,14 @@ int srsran_netsink_init(srsran_netsink_t* q, const char* address, uint16_t port,
     perror("setsockopt(SO_REUSEPORT) failed");
 #endif
 
-  q->servaddr.sin_family      = AF_INET;
+  q->servaddr.sin_family = AF_INET;
   if (inet_pton(q->servaddr.sin_family, address, &q->servaddr.sin_addr) != 1) {
     perror("inet_pton");
     return SRSRAN_ERROR;
   }
-  q->servaddr.sin_port        = htons(port);
-  q->connected                = false;
-  q->type                     = type;
+  q->servaddr.sin_port = htons(port);
+  q->connected         = false;
+  q->type              = type;
 
   return SRSRAN_SUCCESS;
 }
@@ -84,7 +84,7 @@ int srsran_netsink_set_nonblocking(srsran_netsink_t* q)
 int srsran_netsink_write(srsran_netsink_t* q, void* buffer, int nof_bytes)
 {
   if (!q->connected) {
-    if (connect(q->sockfd, &q->servaddr, sizeof(q->servaddr)) < 0) {
+    if (connect(q->sockfd, (const struct sockaddr*)&q->servaddr, sizeof(q->servaddr)) < 0) {
       if (errno == ECONNREFUSED || errno == EINPROGRESS) {
         return SRSRAN_SUCCESS;
       } else {
