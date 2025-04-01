@@ -25,5 +25,5 @@ RUN cmake -DENABLE_ZEROMQ=OFF .. && \
     make -j$(nproc) && \
     make install
 
-CMD ["sh", "-c", "rtue /sniffer.toml"]
+CMD ["sh", "-c", "rtue /ue.conf"]
 
