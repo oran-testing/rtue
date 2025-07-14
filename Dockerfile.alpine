@@ -21,7 +21,7 @@ RUN mkdir -p build && rm -rf build/*
 WORKDIR /rtue/build
 
 
-RUN cmake -DENABLE_ZEROMQ=OFF .. && \
+RUN cmake -DENABLE_ZEROMQ=ON .. && \
     make -j$(nproc) && \
     make install
 
